@@ -8,11 +8,31 @@ from flask_api import FlaskAPI
 import os
 
 app = FlaskAPI(__name__)
+curDir = os.path.dirname(__file__)
+pathToDataFile = os.path.join(curDir, '..', 'DataFile/DataFile.txt')
+    
+
+@app.route("/moviesTrailerApi/v1/getMovieKeys", methods=['GET'])    
+def getMovieKeys():
+    """ Returning column names of data file as movie keys list """
+    with open(os.path.abspath(pathToDataFile)) as fileContent:
+        headerLine = next(fileContent)
+        headerElements = headerLine.split('\t')
+        return headerElements
+
 
 @app.route("/moviesTrailerApi/v1/getMovies", methods=['GET'])
 def getMovies():
+    """ Returning a list of movie dictionaries.
+    
+        The keys of each dictionary element 
+        are the column names in the data file.
+        
+        The values of the dictionary element 
+        are the values for the movie in that column.
+    """
     movieList = []
-    with open(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'DataFile/DataFile.txt'))) as fileContent:
+    with open(os.path.abspath(pathToDataFile)) as fileContent:
         headerLine = next(fileContent)
         headerElements = headerLine.split('\t')
         for line in fileContent:
@@ -23,18 +43,7 @@ def getMovies():
             movieDictionary[headerElements[2]] = movieElements[2]
             movieDictionary[headerElements[3]] = movieElements[3]
             movieList.append(movieDictionary)
-            
     return movieList
-    
-    
-@app.route("/moviesTrailerApi/v1/getMovieKeys", methods=['GET'])    
-def getMovieKeys():
-    with open(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'DataFile/DataFile.txt'))) as fileContent:
-        headerLine = next(fileContent)
-        headerElements = headerLine.split('\t')
-        return headerElements
-    
-    
-    
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)

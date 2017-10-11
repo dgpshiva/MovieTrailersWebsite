@@ -5,8 +5,11 @@ Created on Jul 27, 2017
 '''
 import webbrowser
 
+
 class Movie():    
-    """ Documentation about this class """
+    """ Each instance of this class is one movie.
+        This class also has functions to display a movie's trailer and poster.
+    """
     
     def __init__(self, title, storyLine, posterImageLink, youTubeTrailerUrl):
         self.title = title
@@ -19,6 +22,3 @@ class Movie():
         
     def displayPoster(self):
         webbrowser.open(self.posterImageLink)
-
-        
-    
